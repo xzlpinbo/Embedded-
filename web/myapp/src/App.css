@@ -1,0 +1,16 @@
+.outdiv {
+    border: solid 1px;
+    text-align: center;
+}
+.btn1 {
+    background-color: green;
+    height: 100px;
+    width: 150px;
+}
+
+.btn2 {
+    background-color: blue;
+    margin-top: 10px;
+    height: 100px;
+    width: 150px;
+}
