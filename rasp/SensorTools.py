@@ -31,7 +31,7 @@ import boto3
 class InfraredSensor():
     def __init__(self, irpin):
         super().__init__()
-        self.irpin = irpin
+        self.irpin = int(irpin)
         self.is_running = False
         GPIO.setup(self.irpin, GPIO.IN)
 
@@ -41,8 +41,8 @@ class InfraredSensor():
 
 class WaterPump:
     def __init__(self, in1, in2):
-        self.in1 = in1
-        self.in2 = in2
+        self.in1 = int(in1)
+        self.in2 = int(in2)
         GPIO.setup(self.in1, GPIO.OUT)
         GPIO.setup(self.in2, GPIO.OUT)
 
@@ -57,7 +57,7 @@ class WaterPump:
 
 class ServoMotor:
     def __init__(self, servo_pin):
-        self.servo_pin = servo_pin
+        self.servo_pin = int(servo_pin)
         self.pwm = GPIO.PWM(self.servo_pin, 100)
         # GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.servo_pin, GPIO.OUT)
