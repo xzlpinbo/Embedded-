@@ -22,10 +22,11 @@ PHOTO_RESOLUTION = (256, 256)
 PHOTO_DIR = './photo.jpg'
 
 # 감지할 대상 이름
-TARGET_NAME = 'cat'
+TARGET_NAME = 'Cat'
 
 # 서보 모터가 움직일 각도
-SERVO_ANGLE = 90
+SERVO_ANGLE_OPEN = 180
+SERVO_ANGLE_CLOSE = 400
 
 # MQTT 로 부터 반응할 명령어들
 TURN_ON_COMMAND = 'TEMP1'
@@ -90,10 +91,10 @@ if __name__ == '__main__':
                     cmr.take_picture(PHOTO_DIR)
                     if aws.is_detect(PHOTO_DIR, TARGET_NAME):
                         wp.turn_on()
-                        sm.rotate(SERVO_ANGLE)
+                        sm.rotate(SERVO_ANGLE_OPEN)
                         time.sleep(3)
                         wp.turn_off()
-                        sm.rotate(SERVO_ANGLE)
+                        sm.rotate(SERVO_ANGLE_CLOSE)
             else:
                 ifs_cnt = 0
                 time.sleep(1)

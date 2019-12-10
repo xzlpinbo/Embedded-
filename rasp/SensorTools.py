@@ -59,8 +59,9 @@ class ServoMotor:
     def __init__(self, servo_pin):
         self.servo_pin = int(servo_pin)
         self.pwm = GPIO.PWM(self.servo_pin, 100)
-        # GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.servo_pin, GPIO.OUT)
+        # GPIO.setmode(GPIO.BCM)
+        
         self.pwm.start(2.5)  # Initialisierung
 
     def __del__(self):
