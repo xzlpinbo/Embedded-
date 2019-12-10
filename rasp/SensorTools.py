@@ -58,8 +58,9 @@ class WaterPump:
 class ServoMotor:
     def __init__(self, servo_pin):
         self.servo_pin = int(servo_pin)
-        self.pwm = GPIO.PWM(self.servo_pin, 100)
         GPIO.setup(self.servo_pin, GPIO.OUT)
+        self.pwm = GPIO.PWM(self.servo_pin, 100)
+        
         # GPIO.setmode(GPIO.BCM)
         
         self.pwm.start(2.5)  # Initialisierung
@@ -80,7 +81,8 @@ class Camera:
         camera = picamera.PiCamera()
         camera.resolution = self.resolution
         camera.capture(_dir)
-        time.sleep(1)
+        time.sleep(3)
+        print("save pic")
         camera.close()
 
 class AwsRekogntion:
@@ -96,7 +98,7 @@ class AwsRekogntion:
         print('Detected labels in ' + photo_dir)
         for label in response['Labels']:
             print(label['Name'] + ' : ' + str(label['Confidence']))
-            if label == target_name:
+            if label['Name'] == target_name:
                 return True
         return False
 

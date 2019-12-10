@@ -12,7 +12,7 @@ WATER_PUMP_PIN2 = 24
 SERVO_MOTOR_PIN = 21
 
 # 적외선 센서 탐지시 결과 값
-INFRARED_SENSOR_DETECTED = 1
+INFRARED_SENSOR_DETECTED = 0
 
 # 연속적으로 적외선이 감지하는 시간
 OBJECT_DECTECTION_TIME = 5
@@ -29,8 +29,8 @@ SERVO_ANGLE_OPEN = 180
 SERVO_ANGLE_CLOSE = 400
 
 # MQTT 로 부터 반응할 명령어들
-TURN_ON_COMMAND = 'TEMP1'
-TURN_OFF_COMMAND = 'TEMP2'
+TURN_ON_COMMAND = 'ON'
+TURN_OFF_COMMAND = 'OFF'
 
 # MQTT 설정들
 MQTT_BROKER_URL = 'test.mosquitto.org'
@@ -49,10 +49,10 @@ def on_message(client, userdata, message):
     msg = str(message.payload.decode("utf-8"))
     if msg.find(TURN_ON_COMMAND) != -1:
         wp.turn_on()
-        sm.rotate(SERVO_ANGLE)
+        sm.rotate(SERVO_ANGLE_OPEN)
     elif msg.find(TURN_OFF_COMMAND) != -1:
         wp.turn_off()
-        sm.rotate(SERVO_ANGLE)
+        sm.rotate(SERVO_ANGLE_CLOSE)
 
     print('')
     print("message received ", str(message.payload.decode("utf-8")))
@@ -86,10 +86,12 @@ if __name__ == '__main__':
             if ifs.get_status() == INFRARED_SENSOR_DETECTED:
                 print('ifs_cnt: ', ifs_cnt)
                 ifs_cnt += 1
+                time.sleep(1)
                 if ifs_cnt == OBJECT_DECTECTION_TIME:
                     ifs_cnt = 0
                     cmr.take_picture(PHOTO_DIR)
                     if aws.is_detect(PHOTO_DIR, TARGET_NAME):
+                        print("CAT DETECTED")
                         wp.turn_on()
                         sm.rotate(SERVO_ANGLE_OPEN)
                         time.sleep(3)
