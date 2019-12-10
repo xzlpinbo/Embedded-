@@ -6,21 +6,22 @@ import "./App.css";
 
 function App() {
     function btn1_click() {
-        window.location.href = "http://192.168.64.175:3100/?value=myvalue1";
+        window.location.href = "http://175.193.27.184:3100/?value=myvalue1";
     }
     function btn2_click() {
-        window.location.href = "http://192.168.64.175:3100/?value=myvalue2";
+        window.location.href = "http://175.193.27.184:3100/?value=myvalue2";
     }
     return (
         <div className="outdiv">
+            <div>controller</div>
             <div>
                 <button className="btn1" onClick={btn1_click}>
-                    btn1
+                    ON
                 </button>
             </div>
             <div>
                 <button className="btn2" onClick={btn2_click}>
-                    btn2
+                    OFF
                 </button>
             </div>
         </div>
