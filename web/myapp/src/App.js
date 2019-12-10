@@ -6,10 +6,10 @@ import "./App.css";
 
 function App() {
     function btn1_click() {
-        window.location.href = "http://172.30.1.37:3100/?value=myvalue1";
+        window.location.href = "http://192.168.64.175:3100/?value=myvalue1";
     }
     function btn2_click() {
-        window.location.href = "http://172.30.1.37:3100/?value=myvalue2";
+        window.location.href = "http://192.168.64.175:3100/?value=myvalue2";
     }
     return (
         <div className="outdiv">
