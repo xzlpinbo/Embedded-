@@ -7,8 +7,9 @@ import paho.mqtt.client as mqtt
 
 # 센서 핀 설정
 INFRARED_SENSOR_PIN = 20
-WATER_PUMP_PIN = 21
-SERVO_MOTOR_PIN = 22
+WATER_PUMP_PIN1 = 23
+WATER_PUMP_PIN2 = 24
+SERVO_MOTOR_PIN = 21
 
 # 적외선 센서 탐지시 결과 값
 INFRARED_SENSOR_DETECTED = 1
@@ -64,7 +65,7 @@ if __name__ == '__main__':
     GPIO.setmode(GPIO.BCM)
     ifs = InfraredSensor(INFRARED_SENSOR_PIN)
     cmr = Camera(PHOTO_RESOLUTION)
-    wp = WaterPump(WATER_PUMP_PIN)
+    wp = WaterPump(WATER_PUMP_PIN1, WATER_PUMP_PIN2)
     sm = ServoMotor(SERVO_MOTOR_PIN)
     aws = AwsRekogntion()
 
