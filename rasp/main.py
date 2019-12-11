@@ -36,15 +36,7 @@ TURN_OFF_COMMAND = 'OFF'
 MQTT_BROKER_URL = 'test.mosquitto.org'
 MQTT_SUBSCRIBE = 'konkuk/emb/test'
 
-
-
-# def on_message(client, userdata, message):
-#     print('')
-#     print("message received ", str(message.payload.decode("utf-8")))
-#     print("message topic=", message.topic)
-#     print("message qos=", message.qos)
-#     print("message retain flag=", message.retain)
-
+# MQTT 메시지를 받았을 때, 콜백 함수
 def on_message(client, userdata, message):
     msg = str(message.payload.decode("utf-8"))
     if msg.find(TURN_ON_COMMAND) != -1:
@@ -54,6 +46,7 @@ def on_message(client, userdata, message):
         wp.turn_off()
         sm.rotate(SERVO_ANGLE_CLOSE)
 
+    # 메시지 로그
     print('')
     print("message received ", str(message.payload.decode("utf-8")))
     print("message topic=", message.topic)
@@ -62,6 +55,7 @@ def on_message(client, userdata, message):
 
 
 if __name__ == '__main__':
+    # 센서 초기화
     print('initializing')
     GPIO.setmode(GPIO.BCM)
     ifs = InfraredSensor(INFRARED_SENSOR_PIN)
@@ -70,28 +64,35 @@ if __name__ == '__main__':
     sm = ServoMotor(SERVO_MOTOR_PIN)
     aws = AwsRekogntion()
 
+    # MQTT 초기화
     print("creating new instance")
-    client = mqtt.Client('raspberry_pi')  # create new instance
-    client.on_message = on_message  # attach function to callback
+    client = mqtt.Client('raspberry_pi')  
+    client.on_message = on_message 
     print("connecting to broker")
-    client.connect(MQTT_BROKER_URL)  # connect to broker
+    client.connect(MQTT_BROKER_URL) 
     print("Subscribing to topic", MQTT_SUBSCRIBE)
     client.subscribe(MQTT_SUBSCRIBE)
+    # 비동기식으로 메세지를 받는다.
     client.loop_start()
 
     ifs_cnt = 0
 
     try:
         while True:
+            # 적외선 센서가 감지하면,
             if ifs.get_status() == INFRARED_SENSOR_DETECTED:
                 print('ifs_cnt: ', ifs_cnt)
                 ifs_cnt += 1
                 time.sleep(1)
+                # 정해진 시간이상 물체가 탐지하면,
                 if ifs_cnt == OBJECT_DECTECTION_TIME:
                     ifs_cnt = 0
+                    # 사진을 찍는다.
                     cmr.take_picture(PHOTO_DIR)
+                    # 사진 속에 목표 물체가 있으면,
                     if aws.is_detect(PHOTO_DIR, TARGET_NAME):
                         print("CAT DETECTED")
+                        # 워터 펌프와 서보 모터를 가동한다.
                         wp.turn_on()
                         sm.rotate(SERVO_ANGLE_OPEN)
                         time.sleep(3)
@@ -100,7 +101,7 @@ if __name__ == '__main__':
             else:
                 ifs_cnt = 0
                 time.sleep(1)
-
+    # 프로그램을 종료시 할당된 자원을 반납한다.
     except KeyboardInterrupt:
         client.loop_stop()
         GPIO.output(WATER_PUMP_PIN, GPIO.LOW)
